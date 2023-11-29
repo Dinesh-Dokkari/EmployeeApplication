@@ -2,6 +2,7 @@
 using BusinessLogic_Layer.Services;
 using DataAccess_Layer.Models;
 using EmployeeMVC.Models;
+using MathNet.Numerics.Distributions;
 using Microsoft.AspNetCore.Mvc;
 using NPOI.OpenXmlFormats.Dml;
 using NPOI.OpenXmlFormats.Spreadsheet;
@@ -20,9 +21,104 @@ namespace EmployeeMVC.Controllers
             _service = service;
             _map = map;
         }
+
+
         public IActionResult Index()
         {
+            var results = _map.Map<IEnumerable<EmployeeAllDetailsDTO>>(_service.GetAll());
+            return View("EmployeePaySlip", results);
+        }
+
+        public IActionResult ExcelFileReader()
+        {
             return View();
+        }
+        [HttpPost]
+        public IActionResult ExcelFileReader(IFormFile file)
+        {
+            string filePath = null;
+
+
+            if (file != null && file.Length > 0)
+            {
+                var uploadDirectory = $"{Directory.GetCurrentDirectory()}\\wwwroot\\Uploads";
+                string uniqueName = Guid.NewGuid().ToString() + "_" + file.FileName;
+
+                if (!Directory.Exists(uploadDirectory))
+                {
+                    Directory.CreateDirectory(uploadDirectory);
+                }
+
+                var extension = Path.GetExtension(file.FileName);
+
+
+                if (extension.ToLower().Equals(".xls") || extension.ToLower().Equals(".xlsx"))
+                {
+                    filePath = Path.Combine(uploadDirectory, uniqueName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+
+                }
+                else
+                {
+                    ViewBag.File = "Please Upload .xls,.xlsx Excel formats only!!";
+                    return View();
+
+                }
+
+
+            }
+
+            if (filePath != null)
+            {
+                using (ExcelPackage package = new ExcelPackage(new FileInfo(filePath)))
+                {
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    var sheet = package.Workbook.Worksheets["Sheet1"];
+                    var columnInfo = Enumerable.Range(1, sheet.Dimension.Columns).ToList().Select(n => new { Index = n, ColumnName = sheet.Cells[1, n].Value.ToString() });
+
+                    for (int row = 2; row <= sheet.Dimension.Rows; row++)
+                    {
+                        EmployeeDTO employee = (EmployeeDTO)Activator.CreateInstance(typeof(EmployeeDTO));//generic object
+                        foreach (var prop in typeof(EmployeeDTO).GetProperties())
+                        {
+                            if (!string.IsNullOrWhiteSpace(prop.Name))
+                            {
+                                var col = columnInfo.SingleOrDefault(c => c.ColumnName == prop.Name);
+                                if (col != null)
+                                {
+                                    var column = col.Index;
+                                    var val = sheet.Cells[row, column].Value;
+                                    var propType = prop.PropertyType;
+                                    prop.SetValue(employee, Convert.ChangeType(val, propType));
+                                }
+
+                            }
+                        }
+                        if (employee != null)
+                        {
+                            EmployeeAllDetailsDTO employeeAllDetails = new EmployeeAllDetailsDTO();
+                            employeeAllDetails.SetDetails(employee.EmployeeId, employee.Employee_Name, employee.PhoneNumber, employee.Experience, employee.Annual_CTC);
+                            var employeedb = _map.Map<Employee>(employeeAllDetails);
+
+                            var searchEmployee = _service.GetByName(s => s.EmployeeId == employee.EmployeeId);
+                            if (searchEmployee != null)
+                            {
+                                _service.Update(employeedb);
+                            }
+                            else
+                            {
+                                _service.Create(employeedb);
+                            }
+
+                        }
+                    }
+                }
+            }
+            return RedirectToAction("Index");
         }
 
 
@@ -31,64 +127,13 @@ namespace EmployeeMVC.Controllers
             var Employees =  _service.GetAll();
             foreach (var employee in Employees)
             {
-                EmployeePaySlip(employee.EmployeeId);
+                PaySlipDownload(employee.EmployeeId);
 
             }
             return View();
         }
 
-        public async Task<IActionResult> GetDatafromExcel()
-        {
-
-            string file = @"C:\Users\DDOKKARI\Downloads\EmployeeData(8).xlsx";
-            using (ExcelPackage package = new ExcelPackage(new FileInfo(file)))
-            {
-                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-                var sheet = package.Workbook.Worksheets["Sheet1"];
-                var columnInfo = Enumerable.Range(1, sheet.Dimension.Columns).ToList().Select(n => new { Index = n, ColumnName = sheet.Cells[1, n].Value.ToString() });
-
-                for (int row = 2; row <= sheet.Dimension.Rows; row++)
-                {
-                    EmployeeDTO employee = (EmployeeDTO)Activator.CreateInstance(typeof(EmployeeDTO));//generic object
-                    foreach (var prop in typeof(EmployeeDTO).GetProperties())
-                    {
-                        if (!string.IsNullOrWhiteSpace(prop.Name))
-                        {
-                            var col = columnInfo.SingleOrDefault(c => c.ColumnName == prop.Name);
-                            if (col != null)
-                            {
-                                var column = col.Index;
-                                var val = sheet.Cells[row, column].Value;
-                                var propType = prop.PropertyType;
-                                prop.SetValue(employee, Convert.ChangeType(val, propType));
-                            }
-
-                        }
-                    }
-                    if (employee != null)
-                    {
-                        EmployeeAllDetailsDTO employeeAllDetails = new EmployeeAllDetailsDTO();
-                        employeeAllDetails.SetDetails(employee.EmployeeId,employee.Employee_Name,employee.PhoneNumber,employee.Experience,employee.Annual_CTC);
-                        var employeedb = _map.Map<Employee>(employeeAllDetails);
-
-                        var searchEmployee = _service.GetByName(s=> s.EmployeeId== employee.EmployeeId);
-                        if (searchEmployee != null)
-                        {
-                            _service.Update(employeedb);
-                        }
-                        else
-                        {
-                            _service.Create(employeedb);
-                        }
-
-                    }
-                }
-            }
-            var results = _map.Map<IEnumerable<EmployeeAllDetailsDTO>>(_service.GetAll());
-            return View("EmployeeDetails", results);
-        }
-
-        public async void EmployeePaySlip(int id)
+        public void PaySlipDownload(int id)
         {
             var employee = _service.Get(id);
 
