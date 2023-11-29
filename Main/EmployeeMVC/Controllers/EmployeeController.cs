@@ -26,21 +26,21 @@ namespace EmployeeMVC.Controllers
         }
 
 
-        public async Task<IActionResult> DownLoadAll()
+        public IActionResult DownLoadAll()
         {
-            var Employees = await _service.GetAll();
+            var Employees =  _service.GetAll();
             foreach (var employee in Employees)
             {
-                Employee(employee.EmployeeId);
+                EmployeePaySlip(employee.EmployeeId);
 
             }
             return View();
         }
 
-        public async Task<IActionResult> GetList()
+        public async Task<IActionResult> GetDatafromExcel()
         {
 
-            string file = @"C:\Users\DDOKKARI\Downloads\EmployeeData (3).xlsx";
+            string file = @"C:\Users\DDOKKARI\Downloads\EmployeeData(8).xlsx";
             using (ExcelPackage package = new ExcelPackage(new FileInfo(file)))
             {
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -68,20 +68,29 @@ namespace EmployeeMVC.Controllers
                     if (employee != null)
                     {
                         EmployeeAllDetailsDTO employeeAllDetails = new EmployeeAllDetailsDTO();
-                        employeeAllDetails.SetDetails(employee.Employee_Name,employee.PhoneNumber,employee.Experience,employee.Annual_CTC);
+                        employeeAllDetails.SetDetails(employee.EmployeeId,employee.Employee_Name,employee.PhoneNumber,employee.Experience,employee.Annual_CTC);
                         var employeedb = _map.Map<Employee>(employeeAllDetails);
-                        await _service.Create(employeedb);
-                        
+
+                        var searchEmployee = _service.GetByName(s=> s.EmployeeId== employee.EmployeeId);
+                        if (searchEmployee != null)
+                        {
+                            _service.Update(employeedb);
+                        }
+                        else
+                        {
+                            _service.Create(employeedb);
+                        }
+
                     }
                 }
             }
-            var results = _map.Map<IEnumerable<EmployeeAllDetailsDTO>>(await _service.GetAll());
-            return View("PaySlip", results);
+            var results = _map.Map<IEnumerable<EmployeeAllDetailsDTO>>(_service.GetAll());
+            return View("EmployeeDetails", results);
         }
 
-        public async void Employee(int id)
+        public async void EmployeePaySlip(int id)
         {
-            var employee = await _service.Get(id);
+            var employee = _service.Get(id);
 
             //EmployeeAllDetailsDTO employeeAllDetails = new EmployeeAllDetailsDTO();
 
@@ -106,7 +115,7 @@ namespace EmployeeMVC.Controllers
                 $"   <h3>Total Deduction : {employee.Total_Deduction}</h3>" +
                 $"   <h3>NetPay : {employee.NetPay}</h3>");
 
-            pdf.SaveAs(@"C:\Users\DDOKKARI\Documents\November Projects\EmployeesApplication\EmployeeApplication\Main\EmployeeMVC\EmployeePaySlips\" + employee.Employee_Name + ".pdf");
+            pdf.SaveAs(@"C:\Users\DDOKKARI\Documents\November Projects\EmployeesApplication\EmployeeApplication\Main\EmployeeMVC\PaySlips\" + employee.Employee_Name + ".pdf");
         }
     }
 }

@@ -1,10 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataAccess_Layer.Models
 {
     public class Employee
     {
-        [Key]
+        //[Key]
+        //public int Id { get; set; }
+
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int EmployeeId { get; set; }
 
         [Required]
@@ -21,9 +25,9 @@ namespace DataAccess_Layer.Models
         public double Basic_Amount { get; set; }//50%
         public double HRA_Amount { get; set; }//40%
         public double LTA_Amount { get; set; }//10%
-        public double PF_Money { get; }
+        public double PF_Money { get; set; }
         public double Gratuity { get; set; }//8%
-        public double Professional_Tax { get; }
+        public double Professional_Tax { get; set; }
         public double Income_Tax { get; set; }
         public double Total_Deduction { get; set; }
         public double NetPay { get; set; }

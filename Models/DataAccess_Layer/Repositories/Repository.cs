@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,33 +19,29 @@ namespace DataAccess_Layer.Repositories
         {
             _db = db;
         }
-        public async Task<int> Create(T entity)
+        public int Create(T entity)
         {
-            await _db.Set<T>().AddAsync(entity);
-            return await SaveDetails();
+             _db.Set<T>().Add(entity);
+            return SaveDetails();
 
         }
 
-        public async Task<int> Delete(int? id)
+        public int Delete(int? id)
         {
-            var entityRecord = await _db.Set<T>().FindAsync(id);
+            var entityRecord = _db.Set<T>().Find(id);
 
             if (entityRecord != null)
             {
                 _db.Set<T>().Remove(entityRecord);
             }
-            int result = await SaveDetails();
+            int result = SaveDetails();
             return result;
         }
 
-        public Task<int> Edit(int? id, T entity)
-        {
-            throw new NotImplementedException();
-        }
 
-        public async Task<T> Get(int? id)
+        public T Get(int? id)
         {
-            var entityRecord = await _db.Set<T>().FindAsync(id);
+            var entityRecord =  _db.Set<T>().Find(id);
             if(entityRecord != null)
             {
                 return entityRecord;
@@ -54,24 +52,35 @@ namespace DataAccess_Layer.Repositories
             }
         }
 
-        public async Task<IEnumerable<T>> GetAll()
+        public IEnumerable<T> GetAll()
         {
-            var records = await _db.Set<T>().ToListAsync();
+            var records = _db.Set<T>().ToList();
             return records;
         }
 
 
-        public async Task<int> Update(T entity)
+        public int Update(T entity)
         {
             _db.Set<T>().Update(entity);
-            return await SaveDetails();
+            return  SaveDetails();
         }
 
-        public async Task<int> SaveDetails()
+        public int SaveDetails()
         {
-            return await _db.SaveChangesAsync();
+            return  _db.SaveChanges();
         }
 
-
+        public T GetByName(Expression<Func<T,bool>> expression = null)
+        {
+            var entityRecord =  _db.Set<T>().FirstOrDefault(expression);
+            if (entityRecord != null)
+            {
+                return entityRecord;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

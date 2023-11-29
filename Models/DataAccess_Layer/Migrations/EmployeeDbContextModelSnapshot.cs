@@ -24,10 +24,7 @@ namespace DataAccess_Layer.Migrations
             modelBuilder.Entity("DataAccess_Layer.Models.Employee", b =>
                 {
                     b.Property<int>("EmployeeId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeId"));
 
                     b.Property<double>("Annual_CTC")
                         .HasColumnType("float");
@@ -60,9 +57,15 @@ namespace DataAccess_Layer.Migrations
                     b.Property<double>("NetPay")
                         .HasColumnType("float");
 
+                    b.Property<double>("PF_Money")
+                        .HasColumnType("float");
+
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Professional_Tax")
+                        .HasColumnType("float");
 
                     b.Property<double>("Total_Deduction")
                         .HasColumnType("float");
