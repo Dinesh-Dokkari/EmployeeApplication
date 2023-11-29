@@ -1,0 +1,58 @@
+﻿@model IEnumerable<EmployeeAllDetailsDTO>
+
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+@*            <th>
+                @Html.DisplayNameFor(model=>model.EmployeeId)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model=>model.Employee_Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model=>model.PhoneNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model=>model.Experience)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model=>model.Annual_CTC)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+@*                <td>
+                    @Html.DisplayFor(modelItem => item.EmployeeId)
+                </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.Employee_Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Experience)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Annual_CTC)
+                </td>
+                @*                <td>
+            <a class = "btn btn-primary" asp-action="" asp-controller="Home" asp-route-id = "@item.EmployeeId">Download PaySlip</a>
+            <a class="btn btn-primary" asp-action="Employee" asp-controller="Home" asp-route-id="@item.EmployeeId">Details</a>
+            </td>*@
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-primary" asp-action="DownloadAll" asp-controller="Employee">DownLoad All</a>
+
+
