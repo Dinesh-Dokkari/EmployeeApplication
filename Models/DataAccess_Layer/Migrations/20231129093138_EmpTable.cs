@@ -5,7 +5,7 @@
 namespace DataAccess_Layer.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class EmpTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -14,8 +14,7 @@ namespace DataAccess_Layer.Migrations
                 name: "Employees",
                 columns: table => new
                 {
-                    EmployeeId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false),
                     Employee_Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Experience = table.Column<double>(type: "float", nullable: false),
@@ -23,7 +22,9 @@ namespace DataAccess_Layer.Migrations
                     Basic_Amount = table.Column<double>(type: "float", nullable: false),
                     HRA_Amount = table.Column<double>(type: "float", nullable: false),
                     LTA_Amount = table.Column<double>(type: "float", nullable: false),
+                    PF_Money = table.Column<double>(type: "float", nullable: false),
                     Gratuity = table.Column<double>(type: "float", nullable: false),
+                    Professional_Tax = table.Column<double>(type: "float", nullable: false),
                     Income_Tax = table.Column<double>(type: "float", nullable: false),
                     Total_Deduction = table.Column<double>(type: "float", nullable: false),
                     NetPay = table.Column<double>(type: "float", nullable: false),

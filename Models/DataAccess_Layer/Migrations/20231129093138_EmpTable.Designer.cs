@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess_Layer.Migrations
 {
     [DbContext(typeof(EmployeeDbContext))]
-    [Migration("20231128133448_Initial1")]
-    partial class Initial1
+    [Migration("20231129093138_EmpTable")]
+    partial class EmpTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,10 +27,7 @@ namespace DataAccess_Layer.Migrations
             modelBuilder.Entity("DataAccess_Layer.Models.Employee", b =>
                 {
                     b.Property<int>("EmployeeId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeId"));
 
                     b.Property<double>("Annual_CTC")
                         .HasColumnType("float");
@@ -63,9 +60,15 @@ namespace DataAccess_Layer.Migrations
                     b.Property<double>("NetPay")
                         .HasColumnType("float");
 
+                    b.Property<double>("PF_Money")
+                        .HasColumnType("float");
+
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Professional_Tax")
+                        .HasColumnType("float");
 
                     b.Property<double>("Total_Deduction")
                         .HasColumnType("float");

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,19 +9,18 @@ namespace DataAccess_Layer.Repositories
 {
     public interface IRepository<T> where T : class
     {
-        Task<IEnumerable<T>> GetAll();
+        IEnumerable<T> GetAll();
 
-        Task<int> Create(T entity);
+        int Create(T entity);
 
-        Task<T> Get(int? id);
+        T Get(int? id);
+        T GetByName(Expression<Func<T, bool>> expression = null);
 
-        Task<int> Edit(int? id, T entity);
+        int Delete(int? id);
 
-        Task<int> Delete(int? id);
+        int SaveDetails();
 
-        Task<int> SaveDetails();
-
-        Task<int> Update(T entity);
+        int Update(T entity);
 
     }
 }

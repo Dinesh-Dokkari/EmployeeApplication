@@ -4,6 +4,7 @@ namespace EmployeeMVC.Models
 {
     public class EmployeeAllDetailsDTO
     {
+        public int EmployeeId { get; set; }
         public string Employee_Name { get; set; }
         public string PhoneNumber { get; set; }
         public double Experience { get; set; }
@@ -20,8 +21,9 @@ namespace EmployeeMVC.Models
         public double Monthly_CTC { get; set; }
 
 
-        public void SetDetails(string name,string number,double experience,double anuual)
+        public void SetDetails(int id,string name,string number,double experience,double anuual)
         {
+            this.EmployeeId = id;
             this.Employee_Name = name;
             this.PhoneNumber = number;
             this.Experience = experience;
