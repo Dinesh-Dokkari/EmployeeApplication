@@ -9,6 +9,7 @@ namespace EmployeeMVC.Profiles
         public MapConfig()
         {
             CreateMap<EmployeeAllDetailsDTO, Employee>().ReverseMap();
+            CreateMap<EmployeeSalary, SalaryUpdateDTO>().ReverseMap();
         }
     }
 }

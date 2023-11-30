@@ -14,11 +14,13 @@ namespace EmployeeMVC.Controllers
     public class EmployeeController : Controller
     {
         private readonly IEmployeeService _service;
+        private readonly IEmployeeSalaryService _salservice;
         private readonly IMapper _map;
 
-        public EmployeeController(IEmployeeService service,IMapper map)
+        public EmployeeController(IEmployeeService service,IMapper map,IEmployeeSalaryService salservice)
         {
             _service = service;
+            _salservice = salservice;
             _map = map;
         }
 
@@ -100,8 +102,16 @@ namespace EmployeeMVC.Controllers
                         }
                         if (employee != null)
                         {
+                            var today = DateTime.Now;
+                            var UpdateSalary = _salservice.GetAll().FirstOrDefault(e => e.EmployeeId == employee.EmployeeId  && e.ToDate < today);
+                            if (UpdateSalary != null)
+                            {
+                                employee.Annual_CTC = UpdateSalary.New_CTC;
+                            }
+
+
                             EmployeeAllDetailsDTO employeeAllDetails = new EmployeeAllDetailsDTO();
-                            employeeAllDetails.SetDetails(employee.EmployeeId, employee.Employee_Name, employee.PhoneNumber, employee.Experience, employee.Annual_CTC);
+                            employeeAllDetails.SetDetails(employee.EmployeeId, employee.Employee_Name,employee.Email, employee.PhoneNumber, employee.Experience, employee.Annual_CTC);
                             var employeedb = _map.Map<Employee>(employeeAllDetails);
 
                             var searchEmployee = _service.GetByName(s => s.EmployeeId == employee.EmployeeId);
@@ -142,23 +152,24 @@ namespace EmployeeMVC.Controllers
 
 
             var renderer = new ChromePdfRenderer();
-            var pdf = renderer.RenderHtmlAsPdf($"    <h1>Basic Employee PaySlip</h1>" +
-                $"   <p>---------------------------------------------------------</p>" +
-                $"    <h3>Employee Name : {employee.Employee_Name}</h3>" +
-                $"    <h3>Employee ID : {employee.EmployeeId}</h3>" +
-                $"    <h3>PhoneNumber : {employee.PhoneNumber}</h3>" +
-                $"   <h3>Experience : {employee.Experience}</h3>" +
-                $"   <h3>Annual CTC : {employee.Annual_CTC}</h3>" +
-                $"   <h3>Basic Amount(50%) : {employee.Basic_Amount}</h3>" +
-                $"    <h3>HRA Amount(40%) : {employee.HRA_Amount}</h3>" +
-                $"   <h3>LTA Amount(10%) : {employee.LTA_Amount}</h3>" +
-                $"    <h3>PF Amount : {employee.PF_Money}</h3>" +
-                $"   <h3>Gratuity :{employee.Gratuity}</h3>" +
-                $"  <h3>Professional Tax : {employee.Professional_Tax}</h3>" +
-                $"    <h3>Income Tax: {employee.Income_Tax}</h3>" +
-                $"   <h3>Professional Tax : {employee.Professional_Tax}</h3>" +
-                $"   <h3>Total Deduction : {employee.Total_Deduction}</h3>" +
-                $"   <h3>NetPay : {employee.NetPay}</h3>");
+            var pdf = renderer.RenderHtmlAsPdf($"<h1>Basic Employee PaySlip(Monthly)</h1>" +
+                $"   <p>-------------------------------------------------------------------------</p>" +
+                $"   <h3>Employee Name :     {employee.Employee_Name}</h3>" +
+                $"   <h3>Employee ID :       {employee.EmployeeId}</h3>" +
+                $"   <h3>Employee Email :    {employee.Email}</h3>" +
+                $"   <h3>PhoneNumber :       {employee.PhoneNumber}</h3>" +
+                $"   <h3>Experience :        {employee.Experience} Years</h3>" +
+                $"   <h3>Annual CTC :        {employee.Annual_CTC} Lakhs</h3>" +
+                $"   <h3>Basic Amount(50%) : {employee.Basic_Amount} Rupees</h3>" +
+                $"   <h3>HRA Amount(40%) :   {employee.HRA_Amount} Rupees</h3>" +
+                $"   <h3>LTA Amount(10%) :   {employee.LTA_Amount} Rupees</h3>" +
+                $"   <h3>PF Amount :         {employee.PF_Money} Rupees</h3>" +
+                $"   <h3>Gratuity :          {employee.Gratuity} Rupees</h3>" +
+                $"   <h3>Professional Tax :  {employee.Professional_Tax} Rupees</h3>" +
+                $"   <h3>Income Tax:         {employee.Income_Tax} Rupees</h3>" +
+                $"   <h3>Professional Tax :  {employee.Professional_Tax} Rupees</h3>" +
+                $"   <h3>Total Deduction :   {employee.Total_Deduction} Rupees</h3>" +
+                $"   <h3>NetPay :            {employee.NetPay} Rupees</h3>");
 
             pdf.SaveAs(@"C:\Users\DDOKKARI\Documents\November Projects\EmployeesApplication\EmployeeApplication\Main\EmployeeMVC\PaySlips\" + employee.Employee_Name + ".pdf");
         }

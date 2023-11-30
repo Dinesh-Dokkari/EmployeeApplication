@@ -16,10 +16,10 @@ namespace DataAccess_Layer.Data
         }
 
         public DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<EmployeeSalary> EmployeeSalary { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("name = ConnectionStrings:defaultConnection");
             optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         }
     }

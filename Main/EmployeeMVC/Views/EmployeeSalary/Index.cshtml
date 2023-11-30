@@ -1,0 +1,45 @@
+﻿@model IEnumerable<SalaryUpdateDTO>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model=>model.EmployeeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model=>model.FromDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model=>model.ToDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model=>model.New_CTC)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EmployeeId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FromDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ToDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.New_CTC)
+                </td>
+
+                @*                <td>
+            <a class = "btn btn-primary" asp-action="" asp-controller="Home" asp-route-id = "@item.EmployeeId">Download PaySlip</a>
+            <a class="btn btn-primary" asp-action="Employee" asp-controller="Home" asp-route-id="@item.EmployeeId">Details</a>
+            </td>*@
+            </tr>
+        }
+    </tbody>
+</table>

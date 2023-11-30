@@ -14,9 +14,11 @@ namespace EmployeeMVC
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddDbContext<EmployeeDbContext>();
+            builder.Services.AddDbContext<EmployeeDbContext>(options => 
+                        options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection")));
             builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             builder.Services.AddScoped<IEmployeeService,EmployeeService>();
+            builder.Services.AddScoped<IEmployeeSalaryService,EmployeeSalaryService>();
             builder.Services.AddAutoMapper(typeof(MapConfig));
 
             var app = builder.Build();

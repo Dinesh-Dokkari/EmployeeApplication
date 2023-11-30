@@ -6,6 +6,9 @@ namespace EmployeeMVC.Models
     {
         public int EmployeeId { get; set; }
         public string Employee_Name { get; set; }
+
+        public string Email { get; set; }
+
         public string PhoneNumber { get; set; }
         public double Experience { get; set; }
         public double Annual_CTC { get; set; }
@@ -21,10 +24,11 @@ namespace EmployeeMVC.Models
         public double Monthly_CTC { get; set; }
 
 
-        public void SetDetails(int id,string name,string number,double experience,double anuual)
+        public void SetDetails(int id,string name,string email,string number,double experience,double anuual)
         {
             this.EmployeeId = id;
             this.Employee_Name = name;
+            this.Email = email;
             this.PhoneNumber = number;
             this.Experience = experience;
             this.Annual_CTC = anuual;
