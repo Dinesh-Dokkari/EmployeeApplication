@@ -1,0 +1,71 @@
+﻿@model EmployeeDTO
+
+<h1>@ViewBag.EmployeeName Details</h1>
+
+<div>
+    <h4>Student</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EmployeeId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EmployeeId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Employee_Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Employee_Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Annual_CTC)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Annual_CTC)
+        </dd>
+    </dl>
+</div>
+
+<form method="post" enctype="multipart/form-data">
+    <input type="hidden" name="id" value="@Model.EmployeeId" />
+    <label>Choose month : </label>
+    <select name="month">
+        <option value="1">January</option>
+        <option value="2">February</option>
+        <option value="3">March</option>
+        <option value="4">April</option>
+        <option value="5">May</option>
+        <option value="6">June</option>
+        <option value="7">July</option>
+        <option value="8">August</option>
+        <option value="9">September</option>
+        <option value="10">October</option>
+        <option value="11">November</option>
+        <option value="12">December</option>
+    </select>
+    <input type="submit" asp-controller="Employee" asp-action="DownloadPaySlip" class="btn btn-primary" value="DownLoad PaySlip" />
+
+</form>
+
+
+<a asp-controller="Employee" asp-action="Index">Back to List</a>
+
+<br />
+<br />
+
+<h3 class="text-success">   @TempData["Downloaded"]</h3>
+
+

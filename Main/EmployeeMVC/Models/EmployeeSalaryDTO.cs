@@ -11,5 +11,8 @@
         public DateOnly ToDate { get; set; }
 
         public double New_CTC { get; set; }
+
+        public int LeadId { get; set; }
+
     }
 }

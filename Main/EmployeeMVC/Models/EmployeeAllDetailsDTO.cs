@@ -1,4 +1,5 @@
 ﻿using NPOI.SS.Formula.Functions;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EmployeeMVC.Models
 {
@@ -12,6 +13,9 @@ namespace EmployeeMVC.Models
         public string PhoneNumber { get; set; }
         public double Experience { get; set; }
         public double Annual_CTC { get; set; }
+
+        public int LeadId { get; set; }
+
         public double Basic_Amount { get; set; }//50%
         public double HRA_Amount { get; set; }//40%
         public double LTA_Amount { get; set; }//10%
@@ -24,7 +28,8 @@ namespace EmployeeMVC.Models
         public double Monthly_CTC { get; set; }
 
 
-        public void SetDetails(int id,string name,string email,string number,double experience,double anuual)
+
+        public void SetDetails(int id,string name,string email,string number,double experience,double anuual,int leadId)
         {
             this.EmployeeId = id;
             this.Employee_Name = name;
@@ -32,6 +37,7 @@ namespace EmployeeMVC.Models
             this.PhoneNumber = number;
             this.Experience = experience;
             this.Annual_CTC = anuual;
+            this.LeadId = leadId;
 
             Monthly_CTC = Math.Round((Annual_CTC * 100000) / 12.0,2);
 

@@ -35,11 +35,13 @@
                     @Html.DisplayFor(modelItem => item.New_CTC)
                 </td>
 
-                @*                <td>
-            <a class = "btn btn-primary" asp-action="" asp-controller="Home" asp-route-id = "@item.EmployeeId">Download PaySlip</a>
-            <a class="btn btn-primary" asp-action="Employee" asp-controller="Home" asp-route-id="@item.EmployeeId">Details</a>
-            </td>*@
+                <td>
+            <a class = "btn btn-primary" asp-action="Edit" asp-controller="EmployeeSalary" asp-route-id = "@item.EmployeeId">Edit</a>
+@*            <a class="btn btn-primary" asp-action="Employee" asp-controller="Home" asp-route-id="@item.EmployeeId">Details</a>
+*@                </td>
             </tr>
         }
     </tbody>
 </table>
+
+<a class="nav-link text-dark" asp-area="" asp-controller="EmployeeSalary" asp-action="Create">Create Salary Update</a>

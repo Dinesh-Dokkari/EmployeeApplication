@@ -1,0 +1,149 @@
+﻿@model IEnumerable<EmployeeDTO>
+
+
+<style>
+table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+}
+table {
+        width:80%;
+        height:30%;
+        text-align:center;
+    }
+</style>
+
+<table>
+    <tr>
+    <th>Employee Id</th>
+    <th>Employee Name</th>
+    <th>Phone Number</th>
+    <th>Email</th>
+    <th>Experience</th>
+    <th>Annual CTC</th>
+    <th>Position</th>
+    </tr>
+
+<div class="container-fluid">
+    <div class="row">
+        <div id="sidebar">
+            <div class="nav flex-column flex-nowrap overflow-hidden">
+                @{
+                    foreach(var emp in Model.Where(s=> s.LeadId == 0).GroupBy(e => new { e.EmployeeId }).ToList())
+                    {
+                        int count = Model.Where(i => i.LeadId == emp.FirstOrDefault().EmployeeId).ToList().Count();
+                        {
+                     
+                                <div class="collapse" id="@emp.FirstOrDefault().Employee_Name" aria-expanded="false">
+
+                                <tr class="bg-primary">
+                                <td>@emp.FirstOrDefault().EmployeeId</td>
+                                <td>@emp.FirstOrDefault().Employee_Name</td>
+                                <td>@emp.FirstOrDefault().PhoneNumber</td>
+                                <td>@emp.FirstOrDefault().Email</td>
+                                <td>@emp.FirstOrDefault().Experience</td>
+                                <td>@emp.FirstOrDefault().Annual_CTC</td>
+                                <td>Team Lead</td>
+                            
+                                
+                                </tr></div>
+                            <div class="collapse" id="@emp.FirstOrDefault().Employee_Name" aria-expanded="false">
+                                <ul class="flex-column p-lg-2 nav">
+                                    @foreach (var subemp in @Model.Where(i => i.LeadId == emp.FirstOrDefault().EmployeeId).ToList())
+                                    {
+                                        <tr>
+                                            <td>@subemp.EmployeeId</td>
+                                            <td>@subemp.Employee_Name</td>
+                                            <td>@subemp.PhoneNumber</td>
+                                            <td>@subemp.Email</td>
+                                            <td>@subemp.Experience</td>
+                                            <td>@subemp.Annual_CTC</td>
+                                            <td>Team Member</td>
+                                        </tr>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</table>
+
+
+
+
+
+
+
+@*@model IEnumerable<EmployeeDTO>
+
+<table>
+    <tr>
+        <th>Employee Id</th>
+        <th>Employee Name</th>
+    </tr>
+
+    @foreach (var employee in Model)
+    {
+        <tr>
+            <td>@employee.EmployeeId</td>
+            <td>@employee.Employee_Name</td>
+            <td class="lead" data-leadid="@employee.LeadId">@employee.LeadId</td>
+            <td class="team-members" data-leadid="@employee.LeadId">
+                @{
+                    int count = Model.Where(i => i.LeadId == @employee.EmployeeId).ToList().Count();
+                    if (count>0)
+                        {
+                        foreach (var subemp in @Model.Where(i => i.LeadId == employee.EmployeeId).ToList())
+                            {
+                                <span>@subemp.Employee_Name</span>
+
+                                <br />
+                            }
+                        }
+                }
+            </td>
+            <!-- Add other cells as needed -->
+        </tr>
+    }
+</table>
+
+<div id="nestedGrid" style="display:none;">
+    <!-- Nested grid content will go here -->
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.lead').click(function () {
+            var leadId = $(this).data('leadid');
+            showTeamMembers(leadId);
+        });
+    });
+
+    function showTeamMembers(leadId) {
+        // Find the row for the clicked lead
+        var leadRow = $('.lead[data-leadid="' + leadId + '"]').closest('tr');
+
+        // Build the nested grid HTML
+        var nestedGridHtml = '<tr id="nestedGridRow"><td colspan="4"><table>';
+        nestedGridHtml += '<tr><th>Id</th><th>Name</th></tr>';
+
+        // Retrieve team members for the clicked lead
+        var teamMembersHtml = $('.team-members[data-leadid="' + leadId + '"]').html();
+
+        nestedGridHtml += '<tr><td colspan="2">' + teamMembersHtml + '</td></tr>';
+        nestedGridHtml += '</table></td></tr>';
+
+        // Check if the nested grid row already exists and remove it
+        $('#nestedGridRow').remove();
+
+        // Insert the nested grid row after the lead row
+        leadRow.after(nestedGridHtml);
+    }
+</script>*@

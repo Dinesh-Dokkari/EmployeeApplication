@@ -31,12 +31,48 @@ namespace EmployeeMVC.Controllers
         [HttpPost]
         public IActionResult Create(SalaryUpdateDTO salUpdate)
         {
-            var result = _map.Map<EmployeeSalary>(salUpdate);
-            _service.Create(result);
+            if(salUpdate == null)
+            {
+                return View();
+            }
+            else
+            {
+                var result = _map.Map<EmployeeSalary>(salUpdate);
+                _service.Create(result);
+            }
 
             return RedirectToAction("Index");
         }
 
-        
+        public IActionResult Edit(int id)
+        {
+            if (id == 0)
+            {
+                return NotFound();
+            }
+
+            var empSal = _service.GetByName(u => u.EmployeeId == id);
+
+            if (empSal == null)
+            {
+                return NotFound();
+            }
+            return View("Edit",_map.Map<SalaryUpdateDTO>(empSal));
+        }
+
+        [HttpPost]
+        public IActionResult Edit(SalaryUpdateDTO empSal)
+        {
+            if (empSal == null)
+            {
+                return View();
+            }
+            else if(ModelState.IsValid)
+            {
+                _service.Update(_map.Map<EmployeeSalary>(empSal));
+            }
+
+            return RedirectToAction("Index");
+        }
     }
 }

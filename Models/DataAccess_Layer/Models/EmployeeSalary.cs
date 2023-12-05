@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -14,9 +16,13 @@ namespace DataAccess_Layer.Models
         public int EmployeeId { get; set; }
 
         //[NotMapped]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = false)]
+
         public DateTime FromDate { get; set; }
 
         //[NotMapped]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = false)]
+
         public DateTime ToDate { get; set; }
 
         public double New_CTC { get; set;}

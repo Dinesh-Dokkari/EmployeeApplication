@@ -44,10 +44,14 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Annual_CTC)
                 </td>
-                @*                <td>
-            <a class = "btn btn-primary" asp-action="" asp-controller="Home" asp-route-id = "@item.EmployeeId">Download PaySlip</a>
-            <a class="btn btn-primary" asp-action="Employee" asp-controller="Home" asp-route-id="@item.EmployeeId">Details</a>
-            </td>*@
+                <td>
+@*                    <a class="btn btn-primary" asp-action="PaySlipDownload" asp-controller="Employee" asp-route-id="@item.EmployeeId">Download PaySlip</a>
+*@
+                    <a class="btn btn-primary" asp-action="Details" asp-controller="Employee" asp-route-id="@item.EmployeeId">Details</a>
+
+
+@*            <a class="btn btn-primary" asp-action="Employee" asp-controller="Home" asp-route-id="@item.EmployeeId">Details</a>
+*@            </td>
             </tr>
         }
     </tbody>

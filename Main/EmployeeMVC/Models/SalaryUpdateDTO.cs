@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace EmployeeMVC.Models
 {
@@ -15,5 +16,8 @@ namespace EmployeeMVC.Models
         public DateTime ToDate { get; set; }
 
         public double New_CTC { get; set; }
+
+        public int LeadId { get; set; }
+
     }
 }

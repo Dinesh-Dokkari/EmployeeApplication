@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,6 +14,9 @@ namespace BusinessLogic_Layer.Services
 
         IEnumerable<EmployeeSalary> GetAll();
 
+        EmployeeSalary GetByName(Expression<Func<EmployeeSalary, bool>> expression = null);
+
+        int Update(EmployeeSalary employeeSalary);
 
 
     }
